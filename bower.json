@@ -1,0 +1,29 @@
+{
+  "name": "serverside-datatables",
+  "main": "serverside-datatables.js",
+  "authors": [
+    "Luca D'Isanto <lukadisanto@gmail.com>"
+  ],
+  "description": "Server side datatable for AngularJS",
+  "keywords": [
+    "Datatable",
+    "datatables",
+    "AngularJs"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "assets/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": ">=1.3.0",
+    "jquery": ">=1.11.0",
+    "bootstrap": "^3.3.6",
+    "ngstorage": "^0.3.11"
+  }
+}
