@@ -3,13 +3,15 @@ AngularJs server side datatable
 
 Definition example:
 
-In HTML page:
 <pre>
+In your angular.module add dependency
+( example: angular.module("app", ["serverside-datatable"]); )
+
+In HTML page:
 &#60;serverside-datatable
     ss-class="table"
     ss-table="ssTable"&#62;
 &#60;/serverside-datatable&#62;
-</pre>
 
 <pre>
 In AngularJs Controller:
