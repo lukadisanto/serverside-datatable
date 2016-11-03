@@ -4,9 +4,9 @@ AngularJs server side datatable
 Definition example:
 
 In HTML page:
-<code>
+<pre>
 <serverside-datatable ss-class="table table-bordered table-condensed table-hover table-striped" ss-table="ssTable"></serverside-datatable>
-</code>
+</pre>
 
 <pre>
 In AngularJs Controller:
