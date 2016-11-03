@@ -8,11 +8,11 @@ bower install serverside-datatable
 
 Add in your page the depencencies:
 <pre>
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="bower_components/bootstrap/angular/angular.min.js"></script>
-<script src="bower_components/ngstorage/ngStorage.min.js"></script>
-<script src="bower_components/serverside-datatable/serverside-datatable.js"></script>
+&#60;script src="bower_components/jquery/dist/jquery.min.js"&#62;&#60;/script&#62;
+&#60;script src="bower_components/bootstrap/dist/js/bootstrap.min.js"&#62;&#60;/script&#62;
+&#60;script src="bower_components/bootstrap/angular/angular.min.js"&#62;&#60;/script&#62;
+&#60;script src="bower_components/ngstorage/ngStorage.min.js"&#62;&#60;/script&#62;
+&#60;script src="bower_components/serverside-datatable/serverside-datatable.js"&#62;&#60;/script&#62;
 </pre>
 
 Definition example:
