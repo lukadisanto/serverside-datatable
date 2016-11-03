@@ -4,7 +4,9 @@ AngularJs server side datatable
 Definition example:
 
 In HTML page:
+<code>
 <serverside-datatable ss-class="table table-bordered table-condensed table-hover table-striped" ss-table="ssTable"></serverside-datatable>
+</code>
 
 <pre>
 In AngularJs Controller:
@@ -107,4 +109,4 @@ Server must give this object response:
         recordsFiltered: type integer. Total amount of record filtered,
         recordsTotal: type integer. Total record diplayed
     }
-<pre>
+</pre>
