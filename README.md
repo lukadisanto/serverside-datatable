@@ -6,8 +6,8 @@ Definition example:
 In HTML page:
 <serverside-datatable ss-class="table table-bordered table-condensed table-hover table-striped" ss-table="ssTable"></serverside-datatable>
 
-In AngularJs Controller:
-$scope.ssTable = {
+In AngularJs Controller: <br>
+$scope.ssTable = { <br>
     instance: "openProject",
     saveState: true,
     api: "api-url-where-keep-data",
