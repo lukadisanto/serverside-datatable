@@ -6,8 +6,9 @@ Definition example:
 In HTML page:
 <serverside-datatable ss-class="table table-bordered table-condensed table-hover table-striped" ss-table="ssTable"></serverside-datatable>
 
-In AngularJs Controller: <br>
-$scope.ssTable = { <br>
+<pre>
+In AngularJs Controller:
+$scope.ssTable = {
     instance: "openProject",
     saveState: true,
     api: "api-url-where-keep-data",
@@ -106,3 +107,4 @@ Server must give this object response:
         recordsFiltered: type integer. Total amount of record filtered,
         recordsTotal: type integer. Total record diplayed
     }
+<pre>
