@@ -5,7 +5,9 @@ Definition example:
 
 In HTML page:
 <pre>
-&#60;serverside-datatable ss-class="table table-bordered table-condensed table-hover table-striped" ss-table="ssTable"&#62;
+&#60;serverside-datatable
+    ss-class="table"
+    ss-table="ssTable"&#62;
 &#60;/serverside-datatable&#62;
 </pre>
 
