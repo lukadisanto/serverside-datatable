@@ -1,5 +1,5 @@
 angular.module("serverside-datatable", [])
-	.directive("serversideDatatable", function() {
+	.directive("serversideDatatableTranslate", function() {
 		return {
 			replace: true,
 			restrict: "E",
@@ -30,7 +30,7 @@ angular.module("serverside-datatable", [])
 										'class="fa fa-sort-amount-asc darkGrey" style="margin-right: 15px !important"></i>' +
                                     '<i ng-show="column.sortable && ssTable.sort.column == $index && ssTable.sort.direction == \'desc\'"' +
 										'class="fa fa-sort-amount-desc darkGrey" style="margin-right: 15px !important"></i>' +
-                                    '{{column.title}}' +
+                                    '{{column.title | translate}}' +
                                 '</th>' +
                             '</tr>' +
                             '<tr ng-if="showFilter" style="cursor: auto !important">' +
@@ -93,9 +93,9 @@ angular.module("serverside-datatable", [])
 					'</nav>' +
                 '</div>' +
             '</div>',
-			controller: function($scope, $element, $attrs, $http, $timeout, $compile, $sessionStorage) {
+			controller: function($scope, $element, $attrs, $http, $timeout, $compile, $sessionStorage, $translate) {
 				var self = $scope;
-				
+
 				//-- Recupero il pulsante dropdown e il menu per gli entries
 				var element = document.getElementById("ssTableEntriesButton");
 				var sibiling = element.nextSibling;
@@ -109,8 +109,10 @@ angular.module("serverside-datatable", [])
 						sibiling.style.display = "none";
 					}
 				};
+				
 
 				if (self.ssTable) {
+
 					// SET RELOAD FUNCTION
 					self.$on("reload-ssTable-data", function (event, instance) {  
 						if (instance == self.ssTable.instance) loadData();

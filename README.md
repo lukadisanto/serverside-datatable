@@ -158,7 +158,7 @@ console.log(body);
 // BASE QUERY
 var sql = "SELECT ";
 var from = "FROM " + body.table + " ";
-var where = "WHERE device_account =  " + req.query.account + " AND object_module = " + req.query.module;
+var where = "WHERE device_account =  " + req.query.account + " AND object_module = " + req.query.module + " ";
 var order = "";
 var limit = "";
 
