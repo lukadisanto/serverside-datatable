@@ -46,6 +46,9 @@ In AngularJs Controller:
         },
         tablename: "users",
         join: [],
+        customWhere = [
+            "id IN (" + string + ")"
+        ],
         columns: [
             {
                 title: "tName",
@@ -123,6 +126,7 @@ Options:
 - sort: type: object. Object containing column sort and direction (asc / desc).
 - tablename: type: string. The name of table that will put in FROM sql query.
 - join: type: string array. Array of sql join that will put in sql query.
+- customWhere: type: string array. Array of sql custom where string that will put in sql query.
 - columns: type: array. Array of objects containing column tha were used to create the table:
     - title: type: string. Table column title.
     - sortable: type: boolean. Enable sorting o thi column.
@@ -206,6 +210,15 @@ module.exports = {
                 ? "WHERE " + key + " = " + req.query[key] + " "
                 : "AND " + key + " = " + req.query[key] + " ";
         }
+
+        //-- CUSTOM WHERE
+        console.log(body.customWhere);
+        for (var string of body.customWhere) {
+            where += (where.indexOf("WHERE") == -1)
+                ? "WHERE " + string + " "
+                : "AND " + string + " ";
+        }
+
 		var i = 0;
 		for (key in body.search) {
 			switch (key) {

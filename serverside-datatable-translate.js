@@ -8,7 +8,7 @@ angular.module("serverside-datatable", [])
 				ssClass: "@"
 			},
 			template: '<div class="row">' +
-                '<div class="col-xs-12">' +
+                '<div class="col-xs-12" ng-show="ssTable.query.data.length > 0">' +
 					'<div class="btn-group">' +
 						'<button type="button" class="btn btn-default">{{ssTable.limit}} entries</button>' +
 						'<button type="button" id="ssTableEntriesButton" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="showThisDropDownMenu()">' +
@@ -47,7 +47,7 @@ angular.module("serverside-datatable", [])
 									'<span ng-if="column.type == \'date\'">{{object[column.dbColumn] | date: column.format: column.timezone}}</span>' +
 									'<span ng-if="column.type == \'button\'">' +
 										'<button ng-class="column.buttonClass" ng-click="column.buttonCallback(object, $index)">' +
-											'{{column.buttonLabel}}</button>' +
+											'{{column.buttonLabel | translate}}</button>' +
 									'</span>' +
 									'<span ng-if="column.type != \'date\' && column.type != \'button\' && !column.render">{{object[column.dbColumn] || column.defaultsTo}}</span>' +
 									'<span ng-if="column.type != \'date\' && column.type != \'button\' && column.render">{{column.render(object)}}</span>' +
@@ -59,10 +59,10 @@ angular.module("serverside-datatable", [])
                         '</tbody>' +
                     '</table>' +
                 '</div>' +
-				'<div class="col-xs-5">' +
+				'<div class="col-xs-5" ng-show="ssTable.query.data.length > 0">' +
 					'<div style="margin-top:30px">Showing {{showing.from}} to {{showing.to}} of {{showing.total}} records</div>' +
                 '</div>' +
-				'<div class="col-xs-7">' +
+				'<div class="col-xs-7" ng-show="ssTable.query.data.length > 0">' +
 					'<nav aria-label="Page navigation" class="pull-right" ng-if="ssTable.query.data.length > 0">' +
   						'<ul class="pagination pagination-sm">' +
     						'<li>' +
@@ -183,9 +183,6 @@ angular.module("serverside-datatable", [])
 						loadData();
 					}
 
-					//-- SET HEADERS
-					var headers = self.ssTable.headers || {};
-
 					//-- SET REQUEST COLUMNS
 					var columns = [];
 					var sortColumn = [];
@@ -243,13 +240,14 @@ angular.module("serverside-datatable", [])
 							offset: self.offset,
 							dateFormat: self.dateFormat,
 							table: self.ssTable.tablename,
-							join: self.ssTable.join || []
+							join: self.ssTable.join || [],
+							customWhere: self.ssTable.customWhere || []
 						};
 						if (self.ssTable.api) {
 							$http({
 								method: 'POST',
 								url: self.ssTable.api,
-								headers: headers,
+								headers: self.ssTable.headers || {},
 								data: filters
 							}).then(function(data) {
 								console.log(data);
