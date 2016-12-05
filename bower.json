@@ -1,6 +1,6 @@
 {
-  "name": "serverside-datatables",
-  "main": "serverside-datatables.js",
+  "name": "serverside-datatable",
+  "main": "serverside-datatable.js",
   "authors": [
     "Luca D'Isanto <lukadisanto@gmail.com>"
   ],
@@ -26,5 +26,6 @@
     "bootstrap": ">=3.0.0",
     "ngstorage": ">=0.3.11",
     "angular-translate": ">=2.13.0"
-  }
+  },
+  "version": "1.0.1"
 }

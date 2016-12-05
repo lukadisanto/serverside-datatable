@@ -24,7 +24,7 @@ angular.module("serverside-datatable", [])
                     '<table ng-class="tableClass">' +
                         '<thead>' +
                             '<tr>' +
-                                '<th ng-repeat="column in ssTable.columns" ng-click="changeSort($index)">' +
+                                '<th ng-repeat="column in ssTable.columns" ng-click="changeSort($index)" ng-if="column.show">' +
                                     '<i ng-show="column.sortable && ssTable.sort.column != $index" class="fa fa-sort-amount-asc softGrey" style="margin-right: 15px !important"></i>' +
                                     '<i ng-show="column.sortable && ssTable.sort.column == $index && ssTable.sort.direction == \'asc\'"' +
 										'class="fa fa-sort-amount-asc darkGrey" style="margin-right: 15px !important"></i>' +
@@ -34,7 +34,7 @@ angular.module("serverside-datatable", [])
                                 '</th>' +
                             '</tr>' +
                             '<tr ng-if="showFilter" style="cursor: auto !important">' +
-                                '<th ng-repeat="column in ssTable.columns">' +
+                                '<th ng-repeat="column in ssTable.columns" ng-if="column.show">' +
 									'<div class="input-group input-group-sm" style="display: block;">' +
 										'<input ng-if="column.filter" class="form-control " ng-model="filters[column.dbColumn]" ng-change="filtersChange($index)" />' +
 									'</div>' +
@@ -43,7 +43,7 @@ angular.module("serverside-datatable", [])
                         '</thead>' +
                         '<tbody>' +
                             '<tr ng-repeat="object in ssTable.query.data" ng-if="ssTable.query.data.length > 0">' +
-                                '<td ng-repeat="column in ssTable.columns">' +
+                                '<td ng-repeat="column in ssTable.columns" ng-if="column.show">' +
 									'<span ng-if="column.type == \'date\'">{{object[column.dbColumn] | date: column.format: column.timezone}}</span>' +
 									'<span ng-if="column.type == \'button\'">' +
 										'<button ng-class="column.buttonClass" ng-click="column.buttonCallback(object, $index)">' +
@@ -242,26 +242,29 @@ angular.module("serverside-datatable", [])
 							limit: self.ssTable.limit,
 							offset: self.offset,
 							dateFormat: self.dateFormat,
-							table: self.ssTable.tablename
+							table: self.ssTable.tablename,
+							join: self.ssTable.join || []
 						};
 						console.log(filters);
-						$http({
-							method: 'POST',
-							url: self.ssTable.api,
-							headers: headers,
-							data: filters
-						}).then(function(data) {
-							self.ssTable.query = data.data;
-							var to = (data.data.recordsFiltered >= self.ssTable.limit) ? self.ssTable.limit : data.data.recordsFiltered;
-							self.showing = {
-								from: (self.offset + 1),
-								to: parseInt(self.offset) + parseInt(to),
-								total: data.data.recordsFiltered
-							}
-							setPagination();
-						}, function(err) {
-							console.log(err);
-						});
+						if (self.ssTable.api) {
+							$http({
+								method: 'POST',
+								url: self.ssTable.api,
+								headers: headers,
+								data: filters
+							}).then(function(data) {
+								self.ssTable.query = data.data;
+								var to = (data.data.recordsFiltered >= self.ssTable.limit) ? self.ssTable.limit : data.data.recordsFiltered;
+								self.showing = {
+									from: (self.offset + 1),
+									to: parseInt(self.offset) + parseInt(to),
+									total: data.data.recordsFiltered
+								}
+								setPagination();
+							}, function(err) {
+								console.log(err);
+							});
+						}
 					}
 
 					//-- HANDLE / SET PAGINATION

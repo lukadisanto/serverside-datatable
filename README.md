@@ -29,58 +29,87 @@ In HTML page:
 
 <pre>
 In AngularJs Controller:
-$scope.ssTable = {
-    instance: "openProject",
-    saveState: true,
-    api: "api-url-where-keep-data",
-    requestType: "sql",
-    headers: {
-        "example": "header"
-    },
-    lengthMenu: [5, 10, 25, 50, 100],
-    limit: 5,
-    page: 1,
-    tablename: "tablename",
-    sort: {
-        column: 0,
-        direction: "desc"
-    },
-    columns: [
-        {
-            title: "Data",
-            sortable: true,
-            filter: true,
-            dbColumn: "database_column",
-            type: "date",
-            format: "dd.MM.yyyy",
-            timezone: "Europe/Rome"
+    var self = $scope;
+    self.ssTable = {
+        instance: "usersTable",
+        saveState: true,
+        requestType: "sql",
+        headers: {
+            "example": "header"
         },
-        {
-            title: "Location",
-            sortable: true,
-            filter: true,
-            dbColumn: "database_column2",
-            type: "string",
-            sqlColumnsMerge: ["col1", "col2"],
-            render: function(object) {
-                // return some data to be displayed;
+        lengthMenu: [10, 25, 50, 100],
+        limit: 10,
+        page: 1,
+        sort: {
+            column: 1,
+            direction: "asc"
+        },
+        tablename: "users",
+        join: [],
+        columns: [
+            {
+                title: "tName",
+                sortable: true,
+                filter: true,
+                dbColumn: "name",
+                type: "string",
+                show: true,
+                // render: function(object) {
+                //     // return some data to be displayed;
+                // },
+                defaultsTo: ""
             },
-            defaultsTo: "someDefaultValue"
-        },
-        {
-            title: "Button column",
-            sortable: false,
-            filter: false,
-            dbColumn: "database_column3",
-            type: "button",
-            buttonLabel: "Button text",
-            buttonClass: "btn btn-success btn-xs",
-            buttonCallback: function(object, index) {
-                console.log(object, index);
+            {
+                title: "tType",
+                sortable: true,
+                filter: true,
+                dbColumn: "user_type",
+                type: "string",
+                show: true,
+                defaultsTo: ""
+            },
+            {
+                title: "tUsername",
+                sortable: true,
+                filter: true,
+                dbColumn: "username",
+                type: "string",
+                show: true,
+                defaultsTo: ""
+            },
+            {
+                dbColumn: "role",
+                show: false,
+                defaultsTo: ""
+            },
+            {
+                title: "",
+                sortable: false,
+                filter: false,
+                dbColumn: "id",
+                type: "button",
+                show: true,
+                buttonLabel: "View",
+                buttonClass: "btn btn-success btn-xs",
+                buttonCallback: function(object, index) {
+                    console.log(object, index);
+                }
+            },
+            {
+                title: "",
+                sortable: false,
+                filter: false,
+                dbColumn: "id",
+                type: "button",
+                show: true,
+                buttonLabel: "Edit",
+                buttonClass: "btn btn-success btn-xs",
+                buttonCallback: function(object, index) {
+                    console.log(object, index);
+                }
             }
-        }
-    ]
-};
+        ]
+    };
 
 Options:
 - instance: type: string. Unique id used for saving page
@@ -92,6 +121,8 @@ Options:
 - limit: type: integer. Start limit data to display.
 - page: type: integer. Starting page. You can also watch for page change.
 - sort: type: object. Object containing column sort and direction (asc / desc).
+- tablename: type: string. The name of table that will put in FROM sql query.
+- join: type: string array. Array of sql join that will put in sql query.
 - columns: type: array. Array of objects containing column tha were used to create the table:
     - title: type: string. Table column title.
     - sortable: type: boolean. Enable sorting o thi column.
@@ -101,6 +132,7 @@ Options:
         - date for date type. if type was date you must specify format and timezone
         - string: normal string
         - button: build a button. You must specify the button label, class and callback.
+    - show: true/false. Render column in view.
     - sqlColumnsMerge: type: array. Array of columns name to merge for output. The data request will be sent with CONCAT(col1, ' ', col2[,....]) AS "dbColumn".
                         if filter is active search contain all columns.
     - defaultsTo: can be string or integer (or function returning string or integer) displayed if the object value is null.
@@ -133,88 +165,95 @@ Server must give this object response:
 
 Server example (sails.js example): 
 <pre>
-function async (generator) { 
-    var iterator = generator();
-    
-    function handle(iteratorResult) {
-        if (iteratorResult.done) return;
+const async = require('asyncawait/async');
+const await = require('asyncawait/await');
 
-        const iteratorValue = iteratorResult.value;
-        iteratorValue.then((res) => {
-            handle(iterator.next(res));
-        }).catch((error) => {
-            // if (JSON.stringify(error).indexOf("duplicate key value violates") > -1) console.log("ASYNC TASK ERROR", error);
-            console.log("ASYNC TASK ERROR", error);
-            handle(iterator.throw(error));
-        });
-    }
+module.exports = {
+    ssTable: async ((req, res) => {
+		console.log(req.body);
+		var body = JSON.parse(JSON.stringify(req.body));
+        console.log(body);
 
-    handle(iterator.next());
-}
+		//-- BASE QUERY
+		var sql = "SELECT ";
+		var from = "FROM " + body.table + " ";
+		var where = "";
+		var join = "";
+		var order = "";
+		var limit = "";
 
-var body = JSON.parse(JSON.stringify(req.body));
-console.log(body);
+		//-- SET COLUMNS
+		var i = 0;
+		for (let field of body.columns) {
+			if (field.indexOf("CONCAT") == -1) {
+				sql += field + " AS \"" + field + "\"";
+				sql += (i < (body.columns.length - 1)) ? ", " : " ";
+			} else {
+				sql += field;
+				sql += (i < (body.columns.length - 1)) ? ", " : " ";
+			}
+			i++;
+		}
 
-// BASE QUERY
-var sql = "SELECT ";
-var from = "FROM " + body.table + " ";
-var where = "WHERE device_account =  " + req.query.account + " AND object_module = " + req.query.module + " ";
-var order = "";
-var limit = "";
+        // SET JOIN
+        for (j of body.join) {
+            join += j + " ";
+        }
 
-// SET COLUMNS
-var i = 0;
-for (let field of body.columns) {
-    if (field.indexOf("CONCAT") == -1) {
-        sql += field + " AS \"" + field + "\"";
-        sql += (i < (body.columns.length - 1)) ? ", " : " ";
-    } else {
-        sql += field;
-        sql += (i < (body.columns.length - 1)) ? ", " : " ";
-    }
-    i++;
-}
+		//-- SET WHERE
+        for (var key in req.query) {
+            where += (where.indexOf("WHERE") == -1)
+                ? "WHERE " + key + " = " + req.query[key] + " "
+                : "AND " + key + " = " + req.query[key] + " ";
+        }
+		var i = 0;
+		for (key in body.search) {
+			switch (key) {
+				case "device_last_call":
+					if (body.search[key] != ""){
+                        where += (where.indexOf("WHERE") == -1)  
+                            ? "WHERE  to_char(" + key + ", '" + body.dateFormat + "') LIKE '%" + body.search[key] + "%' "
+                            : "AND to_char(" + key + ", '" + body.dateFormat + "') LIKE '%" + body.search[key] + "%' ";
+                    }	
+					break;
+				default:
+					if (body.search[key] != "")	{
+                        where += (where.indexOf("WHERE") == -1)
+                            ? "WHERE upper(" + key + ") LIKE '%" + body.search[key].toUpperCase() + "%' "
+                            : "AND upper(" + key + ") LIKE '%" + body.search[key].toUpperCase() + "%' "
+                    }
+					break;
+			}
+			i++;
+		}
 
-// SET WHERE
-var i = 0;
-for (key in body.search) {
-    switch (key) {
-        case "device_last_call":
-            if (body.search[key] != "")	where += "AND to_char(" + key + ", '" + body.dateFormat + "') LIKE '%" + body.search[key] + "%' ";
-            break;
-        default:
-            if (body.search[key] != "")	where += "AND upper(" + key + ") LIKE '%" + body.search[key].toUpperCase() + "%' "
-            break;
-    }
-    i++;
-}
+		//-- SET SORT
+		order += "ORDER BY " + body.sortColumn[body.sort.column] + " " + body.sort.direction + " ";
 
-// SET SORT
-order += "ORDER BY " + body.sortColumn[body.sort.column] + " " + body.sort.direction + " ";
+		//-- SET LIMIT AND OFFSET
+		limit += "LIMIT " + body.limit + " OFFSET " + body.offset;
 
-//-- SET LIMIT AND OFFSET
-limit += "LIMIT " + body.limit + " OFFSET " + body.offset;
+		var query = {
+			count: "SELECT count(*) as total_records " + from + join + where,
+		   	data: sql + from + join + where + order + limit
+		};
+		console.log(query);
 
-var query = {
-    count: "SELECT count(*) as total_records " + from + where,
-    data: sql + from + where + order + limit
+		try {
+			var count = await (new promise(Users, query.count));
+			var totalRecord = count.rows[0].total_records;
+			var data = await (new promise(Users, query.data));
+			var object = {
+				draw: body.draw,
+				recordsTotal: data.rowCount,
+				recordsFiltered: totalRecord,
+				data: data.rows
+			};
+			return res.json(object);
+		} catch (e) {
+			return res.serverError(e);
+		}
+
+	}),
 };
-console.log(query);
-
-async(function *() {  
-    try {
-        var count = yield new promise(Devices, query.count);
-        var totalRecord = count.rows[0].total_records;
-        var data = yield new promise(Devices, query.data);
-        var object = {
-            draw: body.draw,
-            recordsTotal: data.rowCount,
-            recordsFiltered: totalRecord,
-            data: data.rows
-        };
-        return res.json(object);
-    } catch (e) {
-        return res.serverError(e);
-    }
-});
 </pre>
