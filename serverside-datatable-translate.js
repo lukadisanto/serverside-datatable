@@ -114,6 +114,7 @@ angular.module("serverside-datatable", [])
 					// SET RELOAD FUNCTION
 					self.$on("reload-ssTable-data", function (event, instance) {  
 						if (instance == self.ssTable.instance) loadData();
+						if (self.ssTable.debug) console.log(instance);
 					});
 
 					//-- SET TABLE CLASS
@@ -250,7 +251,7 @@ angular.module("serverside-datatable", [])
 								headers: self.ssTable.headers || {},
 								data: filters
 							}).then(function(data) {
-								console.log(data);
+								if (self.ssTable.debug) console.log(data);
 								self.ssTable.query = data.data;
 								var to = (data.data.recordsFiltered >= self.ssTable.limit) ? self.ssTable.limit : data.data.recordsFiltered;
 								self.showing = {
@@ -260,7 +261,7 @@ angular.module("serverside-datatable", [])
 								}
 								setPagination();
 							}, function(err) {
-								console.log(err);
+								if (self.ssTable.debug) console.log(err);
 							});
 						}
 					}

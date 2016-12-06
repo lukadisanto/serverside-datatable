@@ -243,7 +243,7 @@ angular.module("serverside-datatable", [])
 							join: self.ssTable.join || [],
 							customWhere: self.ssTable.customWhere || []
 						};
-						console.log(filters);
+						if (self.ssTable.debug) console.log(filters);
 						if (self.ssTable.api) {
 							$http({
 								method: 'POST',
@@ -251,6 +251,7 @@ angular.module("serverside-datatable", [])
 								headers: self.ssTable.headers || {},
 								data: filters
 							}).then(function(data) {
+								if (self.ssTable.debug) console.log(data);
 								self.ssTable.query = data.data;
 								var to = (data.data.recordsFiltered >= self.ssTable.limit) ? self.ssTable.limit : data.data.recordsFiltered;
 								self.showing = {
@@ -260,7 +261,7 @@ angular.module("serverside-datatable", [])
 								}
 								setPagination();
 							}, function(err) {
-								console.log(err);
+								if (self.ssTable.debug) console.log(err);
 							});
 						}
 					}
