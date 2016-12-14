@@ -269,9 +269,9 @@ angular.module("serverside-datatable", [])
 					//-- HANDLE / SET PAGINATION
 					function setPagination() {
 						// SET PAGINATION
-						self.totalPages = Math.round(self.showing.total / self.ssTable.limit);
+						self.totalPages = Math.ceil(self.showing.total / self.ssTable.limit);
 						self.pagination.pages = [];
-						if (self.totalPages < self.ssTable.page && self.ssTable.query.length > 0) {
+						if (self.totalPages < self.ssTable.page && self.ssTable.page > 1) {
 							self.ssTable.page = 1;
 							loadData();
 						} else {

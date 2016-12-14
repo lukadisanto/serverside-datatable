@@ -51,6 +51,16 @@ In AngularJs Controller:
         ],
         columns: [
             {
+                title: "Data",
+                sortable: true,
+                filter: true,
+                show: true,
+                dbColumn: "start_date",
+                type: "date",
+                format: "dd.MM.yyyy",
+                timezone: "Europe/Rome"
+            },
+            {
                 title: "tName",
                 sortable: true,
                 filter: true,
