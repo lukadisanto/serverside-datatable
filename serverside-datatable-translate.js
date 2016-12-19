@@ -24,7 +24,7 @@ angular.module("serverside-datatable", [])
                     '<table ng-class="tableClass">' +
                         '<thead>' +
                             '<tr>' +
-                                '<th ng-repeat="column in ssTable.columns" ng-click="changeSort($index)" ng-if="column.show">' +
+                                '<th ng-repeat="column in ssTable.columns" ng-click="changeSort($index)" ng-if="column.show" style="white-space: nowrap !important;">' +
                                     '<i ng-show="column.sortable && ssTable.sort.column != $index" class="fa fa-sort-amount-asc softGrey" style="margin-right: 15px !important"></i>' +
                                     '<i ng-show="column.sortable && ssTable.sort.column == $index && ssTable.sort.direction == \'asc\'"' +
 										'class="fa fa-sort-amount-asc darkGrey" style="margin-right: 15px !important"></i>' +
