@@ -236,7 +236,6 @@ angular.module("serverside-datatable", [])
 					};
 					function loadData() {
 						self.offset = (self.ssTable.page - 1) * self.ssTable.limit;
-						console.log(sortColumn);
 						var filters = {
 							sort: self.ssTable.sort,
 							search: search,
