@@ -160,27 +160,41 @@ angular.module("serverside-datatable", [])
 					if (filterActive) self.showFilter = true;
 					self.filtersChange = function(index) {
 						self.ssTable.page = 1;
-						for (var i = 0; i < self.ssTable.columns.length; i++) {
-							var type = self.ssTable.columns[index].type;
-							if (type == 'date') {
-									search[self.ssTable.columns[index].dbColumn] = self.filters[self.ssTable.columns[index].dbColumn];
-									self.dateFormat = self.ssTable.columns[index].format;
-							} else if (type == "string") {
-								if (self.ssTable.columns[index].sqlColumnsMerge) {
+
+						var type = self.ssTable.columns[index].type;
+						if (type == 'date') {
+								search[self.ssTable.columns[index].dbColumn] = self.filters[self.ssTable.columns[index].dbColumn];
+								self.dateFormat = self.ssTable.columns[index].format;
+						} else if (type == "string") {
+							if (self.ssTable.columns[index].sqlColumnsMerge) {
+								console.log(index);
+								console.log("column",self.ssTable.columns[index]);
+								if (self.ssTable.columns[index].sqlConcat) {
+									if (self.ssTable.columns[index].sqlConcat.toUpperCase().indexOf(" AS ") > -1) {
+										console.log(1);
+										var fields = self.ssTable.columns[index].sqlConcat.toUpperCase().split(" AS ");
+										column = fields[0];
+									} else {
+										console.log(2);
+										column = self.ssTable.columns[index].sqlConcat.toUpperCase();
+									}
+								} else {
+										console.log(3);;
 									var column = "CONCAT(";
 									var n = 0;
 									self.ssTable.columns[index].sqlColumnsMerge.forEach(function(field) {
 										if (n > 0) column += ", ' ', ";
-										column += '"' + field + '"';
+										column += (field.indexOf(".") > -1) ? field : '"' + field + '"';
 										n++;
 									});
 									column += ')';
-									search[column] = self.filters[self.ssTable.columns[index].dbColumn].replace(/ /g, "%");
-								} else {
-									search[self.ssTable.columns[index].dbColumn] = self.filters[self.ssTable.columns[index].dbColumn].replace(/ /g, "%");
 								}
+								search[column] = self.filters[self.ssTable.columns[index].dbColumn].replace(/ /g, "%").replace("'","''");
+							} else {
+								search[self.ssTable.columns[index].dbColumn] = self.filters[self.ssTable.columns[index].dbColumn].replace(/ /g, "%").replace("'","''");
 							}
 						}
+
 						loadData();
 					}
 
@@ -193,17 +207,25 @@ angular.module("serverside-datatable", [])
 						if (columns.indexOf(self.ssTable.columns[i].dbColumn) == -1) {
 							var column = "";
 							if (self.ssTable.columns[i].sqlColumnsMerge) {
-								column += "CONCAT(";
+								if (self.ssTable.columns[i].sqlConcat) {
+									column = self.ssTable.columns[i].sqlConcat;
+								} else {
+									column += "CONCAT(";
+									var n = 0;
+									self.ssTable.columns[i].sqlColumnsMerge.forEach(function(field) {
+										if (n > 0) column += ", ' ', ";
+										column += (field.indexOf(".") > -1) ? field : '"' + field + '"';
+										n++;
+									});
+									column += ') AS "' + self.ssTable.columns[i].dbColumn + '"';
+								}
 								var sort = "";
 								var n = 0;
 								self.ssTable.columns[i].sqlColumnsMerge.forEach(function(field) {
-									if (n > 0) column += ", ' ', ";
 									if (n > 0) sort += ",";
-									column += field;
 									sort += field;
 									n++;
 								});
-								column += ') AS "' + self.ssTable.columns[i].dbColumn + '"';
 								sortColumn.push(sort);
 							} else {
 								column += self.ssTable.columns[i].dbColumn;

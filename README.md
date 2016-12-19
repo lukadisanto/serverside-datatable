@@ -135,6 +135,7 @@ Options:
     - show: true/false. Render column in view.
     - sqlColumnsMerge: type: array. Array of columns name to merge for output. The data request will be sent with CONCAT(col1, ' ', col2[,....]) AS "dbColumn".
                         if filter is active search contain all columns.
+    - sqlConcat: string. Custom sql concat (example: sqlConcat: "CONCAT('Major:',beacons.major,', minor:',beacons.minor,', uuid:',beacons.uuid) AS beacon")
     - defaultsTo: can be string or integer (or function returning string or integer) displayed if the object value is null.
     - render: type function. Is a function that take object as argument and must return somthing that will be displayed in the table.
 
