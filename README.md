@@ -46,20 +46,7 @@ In AngularJs Controller:
         },
         tablename: "users",
         join: [],
-        customWhere = [
-            "id IN (" + string + ")"
-        ],
         columns: [
-            {
-                title: "Data",
-                sortable: true,
-                filter: true,
-                show: true,
-                dbColumn: "start_date",
-                type: "date",
-                format: "dd.MM.yyyy",
-                timezone: "Europe/Rome"
-            },
             {
                 title: "tName",
                 sortable: true,
@@ -136,7 +123,6 @@ Options:
 - sort: type: object. Object containing column sort and direction (asc / desc).
 - tablename: type: string. The name of table that will put in FROM sql query.
 - join: type: string array. Array of sql join that will put in sql query.
-- customWhere: type: string array. Array of sql custom where string that will put in sql query.
 - columns: type: array. Array of objects containing column tha were used to create the table:
     - title: type: string. Table column title.
     - sortable: type: boolean. Enable sorting o thi column.
@@ -220,15 +206,6 @@ module.exports = {
                 ? "WHERE " + key + " = " + req.query[key] + " "
                 : "AND " + key + " = " + req.query[key] + " ";
         }
-
-        //-- CUSTOM WHERE
-        console.log(body.customWhere);
-        for (var string of body.customWhere) {
-            where += (where.indexOf("WHERE") == -1)
-                ? "WHERE " + string + " "
-                : "AND " + string + " ";
-        }
-
 		var i = 0;
 		for (key in body.search) {
 			switch (key) {
@@ -251,7 +228,18 @@ module.exports = {
 		}
 
 		//-- SET SORT
-		order += "ORDER BY " + body.sortColumn[body.sort.column] + " " + body.sort.direction + " ";
+		order += "ORDER BY ";
+        if (body.sortColumn[body.sort.column].indexOf(",") > -1) {
+            var arr = body.sortColumn[body.sort.column].split(",");
+            var n = 0;
+            for (var s of arr) {
+                if (n > 0) order += ", ";
+                order += s + " " + body.sort.direction + " ";
+                n++;
+            }
+        } else {
+            order += body.sortColumn[body.sort.column] + " " + body.sort.direction + " ";
+        }
 
 		//-- SET LIMIT AND OFFSET
 		limit += "LIMIT " + body.limit + " OFFSET " + body.offset;

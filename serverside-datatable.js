@@ -190,19 +190,23 @@ angular.module("serverside-datatable", [])
 
 						//-- CHECK FOR DUPLICATES
 						if (columns.indexOf(self.ssTable.columns[i].dbColumn) == -1) {
-							sortColumn.push(self.ssTable.columns[i].dbColumn);
 							var column = "";
 							if (self.ssTable.columns[i].sqlColumnsMerge) {
 								column += "CONCAT(";
+								var sort = "";
 								var n = 0;
 								self.ssTable.columns[i].sqlColumnsMerge.forEach(function(field) {
 									if (n > 0) column += ", ' ', ";
-									column += '"' + field + '"';
+									if (n > 0) sort += ",";
+									column += field;
+									sort += field;
 									n++;
 								});
 								column += ') AS "' + self.ssTable.columns[i].dbColumn + '"';
+								sortColumn.push(sort);
 							} else {
 								column += self.ssTable.columns[i].dbColumn;
+								sortColumn.push(column);
 							}
 							columns.push(column);
 
