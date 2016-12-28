@@ -136,15 +136,17 @@ angular.module("serverside-datatable", [])
 
 					//-- HANDLE SORT DATA
 					self.changeSort = function(index) {
-						if (index == self.ssTable.sort.column) {
-							self.ssTable.sort.direction = (self.ssTable.sort.direction == 'asc') ? 'desc' : 'asc';
-						} else {
-							self.ssTable.sort = {
-								column: index,
-								direction: 'asc'
+						if (self.ssTable.columns[index].sortable) {
+							if (index == self.ssTable.sort.column) {
+								self.ssTable.sort.direction = (self.ssTable.sort.direction == 'asc') ? 'desc' : 'asc';
+							} else {
+								self.ssTable.sort = {
+									column: index,
+									direction: 'asc'
+								}
 							}
+							loadData();
 						}
-						loadData();
 					};
 
 					//-- HANDLE SEARCH IN DATA

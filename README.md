@@ -220,8 +220,8 @@ module.exports = {
 				default:
 					if (body.search[key] != "")	{
                         where += (where.indexOf("WHERE") == -1)
-                            ? "WHERE upper(" + key + ") LIKE '%" + body.search[key].toUpperCase() + "%' "
-                            : "AND upper(" + key + ") LIKE '%" + body.search[key].toUpperCase() + "%' "
+                            ? "WHERE upper(CAST(" + key + " AS varchar)) LIKE '%" + body.search[key].toUpperCase() + "%' "
+                            : "AND upper(CAST(" + key + " AS varchar)) LIKE '%" + body.search[key].toUpperCase() + "%' "
                     }
 					break;
 			}
