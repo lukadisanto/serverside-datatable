@@ -42,7 +42,7 @@ angular.module("serverside-datatable", [])
                             '</tr>' +
                         '</thead>' +
                         '<tbody>' +
-                            '<tr ng-repeat="object in ssTable.query.data" ng-if="ssTable.query.data.length > 0" id="{{object}}">' +
+                            '<tr ng-repeat="object in ssTable.query.data" ng-if="ssTable.query.data.length > 0" id="row_{{$index}}_{{ssTable.page}}">' +
                                 '<td ng-repeat="column in ssTable.columns" ng-if="column.show">' +
 									'<span ng-if="column.type == \'date\'">{{object[column.dbColumn] | date: column.format: column.timezone}}</span>' +
 									'<span ng-if="column.type == \'button\'">' +
@@ -50,7 +50,7 @@ angular.module("serverside-datatable", [])
 											'{{column.buttonLabel}}</button>' +
 									'</span>' +
 									'<span ng-if="column.type != \'date\' && column.type != \'button\' && !column.render">{{object[column.dbColumn] || column.defaultsTo}}</span>' +
-									'<span ng-if="column.type != \'date\' && column.type != \'button\' && column.render">{{column.render(object)}}</span>' +
+									'<span ng-if="column.type != \'date\' && column.type != \'button\' && column.render">{{column.render(object, $index, \'row_\'+$index+\'_\'+ssTable.page)}}</span>' +
 								'</td>' +
                             '</tr>' +
                             '<tr ng-if="ssTable.query.data.length == 0">' +
