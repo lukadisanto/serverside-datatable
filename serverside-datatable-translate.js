@@ -42,7 +42,7 @@ angular.module("serverside-datatable", [])
                             '</tr>' +
                         '</thead>' +
                         '<tbody>' +
-                            '<tr ng-repeat="object in ssTable.query.data" ng-if="ssTable.query.data.length > 0" id="{{angular.toJson(object)}}">' +
+                            '<tr ng-repeat="object in ssTable.query.data" ng-if="ssTable.query.data.length > 0" id="{{object}}">' +
                                 '<td ng-repeat="column in ssTable.columns" ng-if="column.show">' +
 									'<span ng-if="column.type == \'date\'">{{object[column.dbColumn] | date: column.format: column.timezone}}</span>' +
 									'<span ng-if="column.type == \'button\'">' +
