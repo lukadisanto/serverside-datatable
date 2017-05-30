@@ -42,15 +42,15 @@ angular.module("serverside-datatable", [])
                             '</tr>' +
                         '</thead>' +
                         '<tbody>' +
-                            '<tr ng-repeat="object in ssTable.query.data" ng-if="ssTable.query.data.length > 0" id="row_{{$index}}_{{ssTable.page}}">' +
+                            '<tr ng-repeat="object in ssTable.query.data" ng-if="ssTable.query.data.length > 0" id="row_{{$index}}_{{ssTable.page}}" ng-init="sectionIndex = $index">' +
                                 '<td ng-repeat="column in ssTable.columns" ng-if="column.show">' +
 									'<span ng-if="column.type == \'date\'">{{object[column.dbColumn] | date: column.format: column.timezone}}</span>' +
 									'<span ng-if="column.type == \'button\'">' +
-										'<button ng-class="column.buttonClass" ng-click="column.buttonCallback(object, $index, \'row_\'+$index+\'_\'+ssTable.page)">' +
+										'<button ng-class="column.buttonClass" ng-click="column.buttonCallback(object, sectionIndex, \'row_\'+sectionIndex+\'_\'+ssTable.page)">' +
 											'{{column.buttonLabel | translate}}</button>' +
 									'</span>' +
 									'<span ng-if="column.type != \'date\' && column.type != \'button\' && !column.render">{{object[column.dbColumn] || column.defaultsTo}}</span>' +
-									'<span ng-if="column.type != \'date\' && column.type != \'button\' && column.render">{{column.render(object, $index, \'row_\'+$index+\'_\'+ssTable.page)}}</span>' +
+									'<span ng-if="column.type != \'date\' && column.type != \'button\' && column.render">{{column.render(object, sectionIndex, \'row_\'+sectionIndex+\'_\'+ssTable.page)}}</span>' +
 								'</td>' +
                             '</tr>' +
                             '<tr ng-if="ssTable.query.data.length == 0">' +
