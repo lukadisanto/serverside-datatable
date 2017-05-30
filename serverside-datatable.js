@@ -46,7 +46,7 @@ angular.module("serverside-datatable", [])
                                 '<td ng-repeat="column in ssTable.columns" ng-if="column.show">' +
 									'<span ng-if="column.type == \'date\'">{{object[column.dbColumn] | date: column.format: column.timezone}}</span>' +
 									'<span ng-if="column.type == \'button\'">' +
-										'<button ng-class="column.buttonClass" ng-click="column.buttonCallback(object, $index, row_{{$index}}_{{ssTable.page}})">' +
+										'<button ng-class="column.buttonClass" ng-click="column.buttonCallback(object, $index, \'row_\'+$index+\'_\'+ssTable.page)">' +
 											'{{column.buttonLabel}}</button>' +
 									'</span>' +
 									'<span ng-if="column.type != \'date\' && column.type != \'button\' && !column.render">{{object[column.dbColumn] || column.defaultsTo}}</span>' +
